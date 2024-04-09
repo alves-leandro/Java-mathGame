@@ -6,82 +6,44 @@ import model.Calcular;
 
 public class Game {
 
-	static Scanner teclado = new Scanner(System.in);
-	static int pontos = 0;
-	static Calcular calc;
+	private static final Scanner scanner = new Scanner(System.in);
+	private static int pontos = 0;
+	private static Calcular calcular;
 
 	public static void main(String[] args) {
-		Game.jogar();
+		jogar();
 	}
 
 	public static void jogar() {
 		System.out.println("Informe o nível de dificuldade desejado [1, 2, 3 ou 4]: ");
-		int dificuldade = Game.teclado.nextInt();
-
-		Game.calc = new Calcular(dificuldade);
+		int dificuldade = scanner.nextInt();
+		calcular = new Calcular(dificuldade);
 
 		System.out.println("Informe o resultado para a seguinte operação: ");
+		exibirPergunta();
 
-		// somar
-		if (calc.getOperação() == 0) {
-			System.out.println(calc.getValor1() + " + " + calc.getValor2());
-			int resposta = Game.teclado.nextInt();
+		int resposta = scanner.nextInt();
 
-			if (calc.somar(resposta)) {
-				// ganha 1 pto
-				Game.pontos += 1;
-				System.out.println("Você tem " + Game.pontos + " ponto(s).");
-			}
-		}
-
-		// diminuir
-		else if (calc.getOperação() == 1) {
-			System.out.println(calc.getValor1() + " - " + calc.getValor2());
-			int resposta = Game.teclado.nextInt();
-
-			if (calc.diminuir(resposta)) {
-				// ganha 1 pto
-				Game.pontos += 1;
-				System.out.println("Você tem " + Game.pontos + " ponto(s).");
-			}
-		}
-
-		// multiplicar
-		else if (calc.getOperação() == 2) {
-			System.out.println(calc.getValor1() + " X " + calc.getValor2());
-			int resposta = Game.teclado.nextInt();
-
-			if (calc.multiplicar(resposta)) {
-				// ganha 1 pto
-				Game.pontos += 1;
-				System.out.println("Você tem " + Game.pontos + " ponto(s).");
-			}
-		}
-
-		// dividir
-		else if (calc.getOperação() == 3) {
-			System.out.println(calc.getValor1() + " / " + calc.getValor2());
-			int resposta = Game.teclado.nextInt();
-
-			if (calc.dividir(resposta)) {
-				// ganha 1 pto
-				Game.pontos += 1;
-				System.out.println("Você tem " + Game.pontos + " ponto(s).");
-			}
+		if (calcular.verificarResposta(resposta)) {
+			pontos++;
+			System.out.println("Resposta correta! Você tem " + pontos + " ponto(s).");
 		} else {
-			System.out.println("A operação " + calc.getOperação() + " não é reconhecida.");
+			System.out.println("Resposta errada! O valor correto é: " + calcular.getResultado());
 		}
-		
+
 		System.out.println("Deseja continuar? [1 - sim, 0 - não]");
-		int continuar = Game.teclado.nextInt();
-		
-		if(continuar ==1) {
-			Game.jogar();
+		int continuar = scanner.nextInt();
+
+		if (continuar == 1) {
+			jogar();
 		} else {
-			System.out.println("Você fez " + Game.pontos + " ponto(s).");
+			System.out.println("Você fez " + pontos + " ponto(s).");
 			System.out.println("Até a próxima!");
 			System.exit(0);
 		}
 	}
 
+	private static void exibirPergunta() {
+		System.out.println(calcular.getValor1() + " " + calcular.getNomeOperacao() + " " + calcular.getValor2());
+	}
 }
