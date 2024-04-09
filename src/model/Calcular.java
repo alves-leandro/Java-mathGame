@@ -8,41 +8,27 @@ public class Calcular {
 	private int valor2;
 	private int operacao;
 	private int resultado;
+	private int pontuacao;
 
-	public Calcular(int dificuldade) {
-		Random rand = new Random();
-		this.operacao = rand.nextInt(4);
-		this.dificuldade = dificuldade;
-		setValores(rand);
-	}
-
-	private void setValores(Random rand) {
-		switch (dificuldade) {
-		case 1:
-			valor1 = rand.nextInt(10);
-			valor2 = rand.nextInt(10);
-			break;
-		case 2:
-			valor1 = rand.nextInt(100);
-			valor2 = rand.nextInt(100);
-			break;
-		case 3:
-			valor1 = rand.nextInt(1000);
-			valor2 = rand.nextInt(1000);
-			break;
-		case 4:
-			valor1 = rand.nextInt(10000);
-			valor2 = rand.nextInt(10000);
-			break;
-		default:
-			valor1 = rand.nextInt(100000);
-			valor2 = rand.nextInt(100000);
-			break;
-		}
+	public Calcular() {
+		this.dificuldade = 1; // Inicia na dificuldade 1 (fácil)
+		this.pontuacao = 0;
+		gerarNovaOperacao();
 	}
 
 	public int getDificuldade() {
 		return dificuldade;
+	}
+
+	public int getPontuacao() {
+		return pontuacao;
+	}
+
+	public void aumentarPontuacao() {
+		pontuacao++;
+		if (pontuacao % 10 == 0 && dificuldade < 5) { // Aumenta a dificuldade a cada 10 pontos
+			dificuldade++;
+		}
 	}
 
 	public int getValor1() {
@@ -61,12 +47,47 @@ public class Calcular {
 		return resultado;
 	}
 
+	private void gerarNovaOperacao() {
+		Random rand = new Random();
+		Random randValor = new Random();
+
+		switch (dificuldade) {
+		case 1: // Nível fácil: apenas soma e subtração
+			valor1 = rand.nextInt(10); // Números de 0 a 9
+			valor2 = rand.nextInt(10); // Números de 0 a 9
+			operacao = rand.nextInt(2); // 0 - somar, 1 - subtrair
+			break;
+		case 2: // Nível médio: soma, subtração, multiplicação e divisão
+			valor1 = rand.nextInt(10); // Números de 0 a 9
+			valor2 = rand.nextInt(10); // Números de 0 a 9
+			operacao = rand.nextInt(4); // 0 - somar, 1 - subtrair, 2 - multiplicar, 3 - dividir
+			break;
+		case 3: // Nível difícil: aumento da faixa de valores
+			valor1 = randValor.nextInt(100); // Números de 0 a 99
+			valor2 = randValor.nextInt(100); // Números de 0 a 99
+			operacao = rand.nextInt(4); // 0 - somar, 1 - subtrair, 2 - multiplicar, 3 - dividir
+			break;
+		case 4: // Nível muito difícil: aumento da faixa de valores
+			valor1 = randValor.nextInt(1000); // Números de 0 a 999
+			valor2 = randValor.nextInt(1000); // Números de 0 a 999
+			operacao = rand.nextInt(4); // 0 - somar, 1 - subtrair, 2 - multiplicar, 3 - dividir
+			break;
+		case 5: // Nível insano: aumento da faixa de valores
+			valor1 = randValor.nextInt(10000); // Números de 0 a 9999
+			valor2 = randValor.nextInt(10000); // Números de 0 a 9999
+			operacao = rand.nextInt(4); // 0 - somar, 1 - subtrair, 2 - multiplicar, 3 - dividir
+			break;
+		default:
+			break;
+		}
+	}
+
 	public String getNomeOperacao() {
 		switch (operacao) {
 		case 0:
 			return "Somar";
 		case 1:
-			return "Diminuir";
+			return "Subtrair";
 		case 2:
 			return "Multiplicar";
 		case 3:
@@ -94,5 +115,9 @@ public class Calcular {
 			return false;
 		}
 		return resposta == resultado;
+	}
+
+	public void novaRodada() {
+		gerarNovaOperacao();
 	}
 }
